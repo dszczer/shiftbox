@@ -1,0 +1,7 @@
+/*
+ * Shiftbox Bootstrap 3 skin
+ *
+ * @author Damian Szczerbiński
+ * @version 1.0
+ */
+ button.close{font-size:3em;right:20px;top:10px;position:absolute}#shiftbox-button-prev,#shiftbox-button-next,#shiftbox-zoom-switch{position:absolute;width:50px;height:45px;top:50%;cursor:pointer}#shiftbox-button-prev{left:20px}#shiftbox-button-next{right:20px}#shiftbox-zoom-switch{height:66px;width:66px;padding:8px;border-radius:5px;background:rgba(0,0,0,.2);bottom:20px;left:20px;top:unset}
