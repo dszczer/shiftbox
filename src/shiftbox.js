@@ -71,6 +71,14 @@ if (typeof jQuery === "undefined") {
     pictureSelector: "#shiftbox-picture"
   };
 
+  Shiftbox.MODAL_SELECTOR = '#shiftbox-modal';
+  Shiftbox.DATA_SELECTOR = 'shiftbox';
+  Shiftbox.DATA_CURRENT_SELECTOR = 'shiftbox-current';
+
+  function getCurrentShiftboxPluginInstance() {
+    return $(Shiftbox.MODAL_SELECTOR).data(Shiftbox.DATA_CURRENT_SELECTOR);
+  }
+
   /**
    * Create modal, attach events and place it in DOM.
    *
@@ -100,28 +108,28 @@ if (typeof jQuery === "undefined") {
 
       // control button events
       plugin.buttons.prev.off('click').on('click', function () {
-        plugin.prev(plugin);
+        getCurrentShiftboxPluginInstance().prev();
       });
       plugin.buttons.next.off('click').on('click', function () {
-        plugin.next(plugin);
+        getCurrentShiftboxPluginInstance().next();
       });
       plugin.buttons.zoomSwitch.off('click').on('click', function () {
-        plugin.zoomSwitch(plugin);
+        getCurrentShiftboxPluginInstance().zoomSwitch();
       });
 
       // modal state for internal plugin use
       $modal
         .on('shown.bs.modal', function () {
-          plugin.modalOpened = true;
+          getCurrentShiftboxPluginInstance().modalOpened = true;
         })
         .on('hide.bs.modal', function () {
-          plugin.modalOpened = false;
+          getCurrentShiftboxPluginInstance().modalOpened = false;
         });
 
       // fix modal after viewport resize
       $(window).on('resize', function () {
-        if(plugin.modalOpened) {
-          plugin.fitModal(plugin);
+        if(getCurrentShiftboxPluginInstance().modalOpened) {
+          getCurrentShiftboxPluginInstance().fitModal();
         }
       });
 
@@ -174,7 +182,7 @@ if (typeof jQuery === "undefined") {
       }
     }
     // refresh control buttons state
-    plugin.checkButtons(plugin);
+    plugin.checkButtons();
 
     // if plugin is in 2-way display mode, show switch button
     if (plugin.options.zoomSwitch) {
@@ -182,6 +190,9 @@ if (typeof jQuery === "undefined") {
     } else {
       plugin.$modal.find(plugin.options.zoomSwitchSelector).hide();
     }
+
+    // save current plugin instance in modal
+    plugin.$modal.data('shiftbox-current', plugin);
 
     // finally, show modal and load image
     plugin.$modal.modal('show');
@@ -191,12 +202,11 @@ if (typeof jQuery === "undefined") {
   /**
    * Compute modal's size to fit perfectly into viewport.
    *
-   * @param plugin Self injection
-   *
    * @returns void
    */
-  Shiftbox.prototype.fitModal = function (plugin) {
-    var viewport = plugin.getViewport();
+  Shiftbox.prototype.fitModal = function () {
+    var plugin = this,
+        viewport = plugin.getViewport();
 
     // initial modal height
     plugin.current.modalHeight = Math.max(viewport.height - 60, 320);
@@ -245,7 +255,7 @@ if (typeof jQuery === "undefined") {
       // reassign events
       .off('mousemove')
       .on('mousemove', function (e) {
-        plugin.shiftOnMouse(plugin, e);
+        plugin.shiftOnMouse(e);
       })
       .off('touchmove')
       .on('touchmove', function (e) {
@@ -260,7 +270,7 @@ if (typeof jQuery === "undefined") {
         // shift only when touch is on modal
         if(e.pageX < $(this).width() && e.pageX > 0) {
           if(e.pageY < $(this).height() && e.pageY > 0) {
-            plugin.shiftOnMouse(plugin, e);
+            plugin.shiftOnMouse(e);
           }
         }
       })
@@ -301,7 +311,7 @@ if (typeof jQuery === "undefined") {
 
     // after image is downloaded compute modal and image sizes to fit into viewport
     plugin.current.baseImg.onload = function () {
-      plugin.fitModal(plugin);
+      plugin.fitModal();
     };
     // display message on error
     plugin.current.baseImg.onerror = function () {
@@ -350,11 +360,11 @@ if (typeof jQuery === "undefined") {
   /**
    * Move backward in gallery's array.
    *
-   * @param plugin Self injection
-   *
    * @returns void
    */
-  Shiftbox.prototype.prev = function (plugin) {
+  Shiftbox.prototype.prev = function () {
+    var plugin = this;
+
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
@@ -368,7 +378,7 @@ if (typeof jQuery === "undefined") {
         pluginGallery[gallery].index = 0;
       }
       // check control buttons state
-      plugin.checkButtons(plugin);
+      plugin.checkButtons();
       // load new image
       plugin.loadImage(pluginGallery[gallery].list[pluginGallery[gallery].index]);
     }
@@ -377,11 +387,11 @@ if (typeof jQuery === "undefined") {
   /**
    * Move forward in gallery's array.
    *
-   * @param plugin Self injection
-   *
    * @returns void
    */
-  Shiftbox.prototype.next = function (plugin) {
+  Shiftbox.prototype.next = function () {
+    var plugin = this;
+
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
@@ -395,7 +405,7 @@ if (typeof jQuery === "undefined") {
         pluginGallery[gallery].index = pluginGallery[gallery].list.length;
       }
       // check control buttons state
-      plugin.checkButtons(plugin);
+      plugin.checkButtons();
       // load new image
       plugin.loadImage(pluginGallery[gallery].list[pluginGallery[gallery].index]);
     }
@@ -404,25 +414,24 @@ if (typeof jQuery === "undefined") {
   /**
    * Switch display mode state.
    *
-   * @param plugin Self injection
-   *
    * @returns void
    */
-  Shiftbox.prototype.zoomSwitch = function (plugin) {
+  Shiftbox.prototype.zoomSwitch = function () {
+    var plugin = this;
+
     plugin.zoomState = !plugin.zoomState;
     // must recalculate sizes
-    plugin.fitModal(plugin);
+    plugin.fitModal();
   };
 
   /**
    * Show or hide specific control buttons. Depends on current gallery's state.
    *
-   * @param plugin Self injection
-   *
    * @returns void
    */
-  Shiftbox.prototype.checkButtons = function (plugin) {
-    var pluginGallery = $(document).data('shiftbox.gallery');
+  Shiftbox.prototype.checkButtons = function () {
+    var plugin = this,
+        pluginGallery = $(document).data('shiftbox.gallery');
 
     // do only if there is gallery
     if (plugin.gallery) {
@@ -464,12 +473,13 @@ if (typeof jQuery === "undefined") {
   /**
    * Shifts image correlating to mouse movements.
    *
-   * @param plugin Self injection
    * @param e      Triggered event
    *
    * @returns void
    */
-  Shiftbox.prototype.shiftOnMouse = function (plugin, e) {
+  Shiftbox.prototype.shiftOnMouse = function (e) {
+    var plugin = this;
+
     // available only when in shifting state
     if (!plugin.zoomState) {
       return;
@@ -483,10 +493,14 @@ if (typeof jQuery === "undefined") {
 
     // more magic :)
     if (moveX) {
-      plugin.current.$picture.find('img').css('left', -parseInt((diffX * plugin.current.$picture.data('picture-width')) / plugin.current.$picture.data('modal-width')) + diffX);
+      plugin.current.$picture.find('img').css('left',
+        -parseInt((diffX * plugin.current.$picture.data('picture-width')) / plugin.current.$picture.data('modal-width')) + diffX
+      );
     }
     if (moveY) {
-      plugin.current.$picture.find('img').css('top', -parseInt((diffY * plugin.current.$picture.data('picture-height')) / plugin.current.$picture.data('modal-height')) + diffY);
+      plugin.current.$picture.find('img').css('top',
+        -parseInt((diffY * plugin.current.$picture.data('picture-height')) / plugin.current.$picture.data('modal-height')) + diffY
+      );
     }
   };
 
