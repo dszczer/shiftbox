@@ -1,10 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Shiftbox main page</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Shiftbox documentation</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Documentation CSS -->
+    <link rel="stylesheet" href="../css/shiftbox_bootstrap.min.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-    Under construction...
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Shiftbox documentation</h1>
+        <p>Best way to display any images on <b>any</b> screen.</p>
+        <div class="alert alert-warning">Currently plugin supports only Bootstrap 3.</div>
+        <div class="alert alert-info">Plugin requires jQuery v1.11.3 or higher to work.</div>
+    </div>
+</div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2>Installation</h2></div>
+        <div class="panel-body">
+            <p>
+                Installation is described in <a href="https://github.com/dszczer/shiftbox#installation"><i>README.md</i></a> file of main repository directory.
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2>Configurable options</h2></div>
+        <div class="panel-body">
+            <h3>Default options</h3>
+            <p>This is a list of default options (extract from source code):</p>
+            <code>
+                <span class="text-primary">loadingText</span>: <span class="text-muted">"Loading..."</span>,<br>
+                <span class="text-primary">errorText</span>: <span class="text-muted">"Preview not available"</span>,<br>
+                <span class="text-primary">zoomSwitch</span>: <span class="text-muted">true</span>,<br>
+                <span class="text-primary">zoomSwitchSelector</span>: <span class="text-muted">"#shiftbox-zoom-switch"</span>,<br>
+                <span class="text-primary">modalSelector</span>: <span class="text-muted">"#shiftbox-modal"</span>,<br>
+                <span class="text-primary">modalAttachSelector</span>: <span class="text-muted">"body"</span>,<br>
+                <span class="text-primary">modalLayout</span>: <span class="text-muted">'&lt;div class="modal fade" tabindex="-1" role="dialog" id="shiftbox-modal"&gt;'</span> +<br>
+                &nbsp;&nbsp;<span class="text-muted">'&lt;div class="modal-dialog"&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div class="modal-content" style="overflow:hidden"&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div class="modal-body" style="padding:0"&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div id="shiftbox-picture"&gt;&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div id="shiftbox-button-prev"&gt;&lt;img src="/images/shiftbox/prev.png"&gt;&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div id="shiftbox-button-next"&gt;&lt;img src="/images/shiftbox/next.png"&gt;&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;div id="shiftbox-zoom-switch"&gt;&lt;img src="/images/shiftbox/zoom.png"&gt;&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;/button&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted">'&lt;/div&gt;'</span> +<br>
+                &nbsp;&nbsp;<span class="text-muted">'&lt;/div&gt;'</span> +<br>
+                <span class="text-muted">'&lt;/div&gt;'</span>,<br>
+                <span class="text-primary">prevBtnSelector</span>: <span class="text-muted">"#shiftbox-button-prev"</span>,<br>
+                <span class="text-primary">nextBtnSelector</span>: <span class="text-muted">"#shiftbox-button-next"</span>,<br>
+                <span class="text-primary">pictureSelector</span>: <span class="text-muted">"#shiftbox-picture"</span>
+            </code>
+            <h3>Explanation</h3>
+            <ul>
+                <li><b>loadingText</b> <i>(string)</i> - Message displayed on modal when image is loading from server.</li>
+                <li><b>errorText</b> <i>(string)</i> - Message displayed on modal when image cannot be loaded (e.g. 404 not found occurred).</li>
+                <li><b>zoomSwitch</b> <i>(boolean)</i> - Allows to display on mouse/touch move original image size. <code>true</code> to enable, <code>false</code> to disable.</li>
+                <li><b>zoomSwitchSelector</b> <i>(string)</i> - jQuery selector to find element which on click will switch zoom state (if zoomSwitch is <code>true</code>)</li>
+                <li><b>modalSelector</b> <i>(string)</i> - jQuery modal selector to find Switchbox's modal to display.</li>
+                <li><b>modalAttachSelector</b> <i>(string)</i> - jQuery selector of container which modal will be apended to.</li>
+                <li><b>modalLayout</b> <i>(string)</i> - HTML code of modal layout to display.</li>
+                <li><b>prevBtnSelector</b> <i>(string)</i> - jQuery selector to find element which on click will trigger "previous" on gallery.</li>
+                <li><b>nextBtnSelector</b> <i>(string)</i> - jQuery selector to find element which on click will trigger "next" on gallery.</li>
+                <li><b>pictureSelector</b> <i>(string)</i> - jQuery selector to find element which will hold <code>img</code> of displayed image.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading"><h2>Example</h2></div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="text-center">Separate images</h2>
+                    <pre>
+&lt;a href="image.jpg" data-toggle="shiftbox"&gt;
+    &lt;img src="image_thumb.jpg" alt="Image description" title="Image description" class="img-responsive"&gt;
+&lt;/a&gt;</pre>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Regular image (1200x800)</h3>
+                    <a href="example/basic1.jpg" data-toggle="shiftbox">
+                        <img src="example/basic1_t.jpg" alt="Basic example 1" title="Basic example 1" class="img-responsive">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Large image (2020x1377)</h3>
+                    <a href="example/basic2.jpg" data-toggle="shiftbox">
+                        <img src="example/basic2_t.jpg" alt="Basic example 2" title="Basic example 2" class="img-responsive">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Insanely large image (5037x3356)</h3>
+                    <a href="example/basic3.jpg" data-toggle="shiftbox">
+                        <img src="example/basic3_t.jpg" alt="Basic example 3" title="Basic example 3" class="img-responsive">
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="text-center">Gallery images</h2>
+                    <pre>
+&lt;a href="image.jpg" data-toggle="shiftbox" data-gallery="gallery"&gt;
+    &lt;img src="image_thumb.jpg" alt="Image description" title="Image description" class="img-responsive"&gt;
+&lt;/a&gt;</pre>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Regular image (1200x800)</h3>
+                    <a href="example/basic1.jpg" data-toggle="shiftbox" data-gallery="example">
+                        <img src="example/basic1_t.jpg" alt="Gallery example 1" title="Gallery example 1" class="img-responsive">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Large image (2020x1377)</h3>
+                    <a href="example/basic2.jpg" data-toggle="shiftbox" data-gallery="example">
+                        <img src="example/basic2_t.jpg" alt="Gallery example 2" title="Gallery example 2" class="img-responsive">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <h3>Insanely large image (5037x3356)</h3>
+                    <a href="example/basic3.jpg" data-toggle="shiftbox" data-gallery="example">
+                        <img src="example/basic3_t.jpg" alt="Gallery example 3" title="Gallery example 3" class="img-responsive">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<!-- Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Shiftbox -->
+<script type="text/javascript" src="../js/shiftbox.min.js"></script>
+<!-- Init Shiftbox -->
+<script type="text/javascript">
+  $(function () {
+    $('[data-toggle=shiftbox]').shiftbox({
+      modalLayout: '<div class="modal fade" tabindex="-1" role="dialog" id="shiftbox-modal">' +
+      '<div class="modal-dialog">' +
+      '<div class="modal-content" style="overflow:hidden">' +
+      '<div class="modal-body" style="padding:0">' +
+      '<div id="shiftbox-picture"></div>' +
+      '<div id="shiftbox-button-prev"><img src="../images/shiftbox/prev.png"></div>' +
+      '<div id="shiftbox-button-next"><img src="../images/shiftbox/next.png"></div>' +
+      '<div id="shiftbox-zoom-switch"><img src="../images/shiftbox/zoom.png"></div>' +
+      '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+      '<span aria-hidden="true">&times;</span>' +
+      '</button>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>'
+    });
+  });
+</script>
+
 </body>
 </html>

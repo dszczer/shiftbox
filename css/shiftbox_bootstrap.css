@@ -10,7 +10,6 @@ button.close {
   top: 10px;
   position: absolute;
 }
-
 #shiftbox-button-prev, #shiftbox-button-next, #shiftbox-zoom-switch {
   position: absolute;
   width: 50px;
@@ -18,15 +17,12 @@ button.close {
   top: 50%;
   cursor: pointer;
 }
-
 #shiftbox-button-prev {
   left: 20px;
 }
-
 #shiftbox-button-next {
   right: 20px;
 }
-
 #shiftbox-zoom-switch {
   height: 66px;
   width: 66px;
@@ -36,4 +32,13 @@ button.close {
   bottom: 20px;
   left: 20px;
   top: unset;
+}
+.shiftbox-message {
+  margin: 20px;
+  text-align: center;
+}
+.shiftbox-error {
+  margin: 20px;
+  text-align: center;
+  color: #d43f3a;
 }

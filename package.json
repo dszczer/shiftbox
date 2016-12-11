@@ -1,11 +1,11 @@
 {
   "name": "shiftbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple and clever way to display large images on ANY screen",
-  "author": "Damian Szczerbiński <contact@damianszczerbinski.pl>",
+  "author": "Damian Szczerbiński <dszczer@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodejitsu/browsenpm.org"
+    "url": "https://github.com/dszczer/shiftbox"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -15,6 +15,6 @@
     "grunt-contrib-cssmin": "~1.0.0"
   },
   "preferGlobal": true,
-  "private": true,
+  "private": false,
   "license": "MIT"
 }

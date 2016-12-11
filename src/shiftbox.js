@@ -1,9 +1,7 @@
 /**
  * Shiftbox.js
- *
  * @author: Damian Szczerbiński
- * @version: v1.0
- * @dependency: jQuery v1.11.3 or higher
+ * @requires jQuery v1.11.3 or higher
  */
 if (typeof jQuery === "undefined") {
   // plugin won't work without jQuery
@@ -15,10 +13,9 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Shiftbox class definition.
-   *
    * @constructor
    * @param el      DOM element
-   * @param options Options to customize this instance of plugin.
+   * @param options Options to customize this instance of plugin
    */
   var Shiftbox = function (el, options) {
     var plugin = this;
@@ -26,7 +23,7 @@ if (typeof jQuery === "undefined") {
     plugin.options = $.extend({}, Shiftbox.DEFAULTS, options);
     plugin.initGallery();
     plugin.$element.on('click', function (e) {
-      if (plugin.$element.data('lock') !== true) {
+      if (!plugin.modalOpened) {
         plugin.open(e);
       } else {
         return false;
@@ -41,7 +38,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Default options.
-   *
    * @type {{loadingText: string, errorText: string, zoomSwitch: boolean, zoomSwitchSelector: string, modalSelector: string, modalAttachSelector: string, modalLayout: string, prevBtnSelector: string, nextBtnSelector: string, pictureSelector: string}}
    */
   Shiftbox.DEFAULTS = {
@@ -71,17 +67,42 @@ if (typeof jQuery === "undefined") {
     pictureSelector: "#shiftbox-picture"
   };
 
-  Shiftbox.MODAL_SELECTOR = '#shiftbox-modal';
-  Shiftbox.DATA_SELECTOR = 'shiftbox';
-  Shiftbox.DATA_CURRENT_SELECTOR = 'shiftbox-current';
+  /**
+   * Individual image plugin attribute's name.
+   * @type {string}
+   */
+  Shiftbox.DATA_PLUGIN = 'shiftbox';
+  /**
+   * Current image which is shown to the user.
+   * @type {string}
+   */
+  Shiftbox.DATA_CURRENT = 'shiftbox-current';
+  /**
+   * Individual image gallery data atribute's name.
+   * @type {string}
+   */
+  Shiftbox.DATA_GALLERY = 'gallery';
+  /**
+   * Global gallery storage data attribute's name.
+   * @type {string}
+   */
+  Shiftbox.DATA_GLOBAL_GALLERY = 'shiftbox-gallery';
+  /**
+   * Global modal selector data attribute's name.
+   * @type {string}
+   */
+  Shiftbox.DATA_GLOBAL_MODAL = 'shiftbox-modal';
 
+  /**
+   * Get currently displaying image's plugin instance, which is stored in modal.
+   * @returns {*}
+   */
   function getCurrentShiftboxPluginInstance() {
-    return $(Shiftbox.MODAL_SELECTOR).data(Shiftbox.DATA_CURRENT_SELECTOR);
+    return $($(document).data(Shiftbox.DATA_GLOBAL_MODAL)).data(Shiftbox.DATA_CURRENT);
   }
 
   /**
    * Create modal, attach events and place it in DOM.
-   *
    * @returns void
    */
   Shiftbox.prototype.createModal = function () {
@@ -94,6 +115,8 @@ if (typeof jQuery === "undefined") {
       if ($(plugin.options.modalSelector).length === 0) {
         // place it
         $(plugin.options.modalAttachSelector).prepend($modal);
+        // save modal's selector for future use
+        $(document).data(Shiftbox.DATA_GLOBAL_MODAL, plugin.options.modalSelector);
       } else {
         // get it
         $modal = $(plugin.options.modalSelector).first();
@@ -140,7 +163,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Reset modal to it's initial state.
-   *
    * @returns void
    */
   Shiftbox.prototype.resetModal = function () {
@@ -157,14 +179,12 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Shows modal.
-   *
    * @param e Triggered event
-   *
    * @returns void
    */
   Shiftbox.prototype.open = function (e) {
     var plugin = this,
-        pluginGallery = $(document).data('shiftbox.gallery'),
+        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY),
         gallery = plugin.gallery;
 
     // check for 100% sure e is an Event and prevent any default action
@@ -192,7 +212,7 @@ if (typeof jQuery === "undefined") {
     }
 
     // save current plugin instance in modal
-    plugin.$modal.data('shiftbox-current', plugin);
+    plugin.$modal.data(Shiftbox.DATA_CURRENT, plugin);
 
     // finally, show modal and load image
     plugin.$modal.modal('show');
@@ -201,7 +221,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Compute modal's size to fit perfectly into viewport.
-   *
    * @returns void
    */
   Shiftbox.prototype.fitModal = function () {
@@ -316,10 +335,10 @@ if (typeof jQuery === "undefined") {
     // display message on error
     plugin.current.baseImg.onerror = function () {
       plugin.resetModal();
-      plugin.current.$picture.html('<p style="margin:20px">' + plugin.options.errorText + '</p>');
+      plugin.current.$picture.html('<p class="shiftbox-error">' + plugin.options.errorText + '</p>');
     };
     // display loading message
-    plugin.current.$picture.html('<p style="margin:20px">' + plugin.options.loadingText + '</p>');
+    plugin.current.$picture.html('<p class="shiftbox-message">' + plugin.options.loadingText + '</p>');
     // load image
     plugin.current.baseImg.src = imgSrc;
   };
@@ -331,8 +350,8 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.initGallery = function () {
     var plugin = this,
-        gallery = plugin.$element.data('gallery'),
-        pluginGallery = $(document).data('shiftbox.gallery') ? $(document).data('shiftbox.gallery') : {};
+        gallery = plugin.$element.data(Shiftbox.DATA_GALLERY),
+        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) ? $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) : {};
     // if there is gallery name
     if (gallery) {
       // initial, empty gallery
@@ -342,8 +361,10 @@ if (typeof jQuery === "undefined") {
       };
       plugin.gallery = gallery;
       // find all gallery's images and assign them
-      $('[data-toggle="shiftbox"][data-gallery="' + gallery + '"]').each(function () {
-        pluginGallery[gallery].list.push($(this).attr('href'));
+      $('[data-' + Shiftbox.DATA_GALLERY + '="' + gallery + '"]').each(function () {
+        if($(this).attr('href')) {
+          pluginGallery[gallery].list.push($(this).attr('href'));
+        }
       });
       // get current image's index in gallery and remeber it
       for (var i = 0; i < pluginGallery[gallery].list.length; i++) {
@@ -354,7 +375,7 @@ if (typeof jQuery === "undefined") {
       }
     }
     // save gallery
-    $(document).data('shiftbox.gallery', pluginGallery);
+    $(document).data(Shiftbox.DATA_GLOBAL_GALLERY, pluginGallery);
   };
 
   /**
@@ -368,7 +389,7 @@ if (typeof jQuery === "undefined") {
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
-          pluginGallery = $(document).data('shiftbox.gallery');
+          pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
       // if you are able move backward, do so
       if (pluginGallery[gallery].index > 0) {
@@ -395,7 +416,7 @@ if (typeof jQuery === "undefined") {
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
-          pluginGallery = $(document).data('shiftbox.gallery');
+          pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
       // if you are able move forward, do so
       if (pluginGallery[gallery].index < pluginGallery[gallery].list.length - 1) {
@@ -431,7 +452,7 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.checkButtons = function () {
     var plugin = this,
-        pluginGallery = $(document).data('shiftbox.gallery');
+        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
     // do only if there is gallery
     if (plugin.gallery) {
@@ -516,7 +537,7 @@ if (typeof jQuery === "undefined") {
     if (plugin.$modal) {
       plugin.$modal.remove();
     }
-    $plugin.data('shiftbox', undefined);
+    $plugin.data(Shiftbox.DATA_PLUGIN, undefined);
     plugin.prototype.open = function () {};
   };
 
@@ -531,11 +552,11 @@ if (typeof jQuery === "undefined") {
   function Plugin(option) {
     return this.each(function () {
       var $this = $(this),
-          data = $this.data('shiftbox'),
+          data = $this.data(Shiftbox.DATA_PLUGIN),
           options = typeof option === 'object' && option;
 
       if (!data) {
-        $this.data('shiftbox', (data = new Shiftbox(this, options)));
+        $this.data(Shiftbox.DATA_PLUGIN, (data = new Shiftbox(this, options)));
       }
       if (typeof option === 'string' || option instanceof String) {
         data[option].call($this);
