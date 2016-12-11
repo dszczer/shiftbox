@@ -12,19 +12,17 @@ module.exports = function(grunt) {
     uglify: {
       my_target: {
         files: {
-          'js/shiftbox.min.js': ['src/shiftbox.js']
+          'dist/js/shiftbox.min.js': ['src/shiftbox.js'],
+          'docs/dist/shiftbox.min.js': ['src/shiftbox.js']
         }
       }
     },
     cssmin: {
       target: {
-        files: [{
-          expand: true,
-          cwd: 'css',
-          src: ['*.css', '!*.min.css'],
-          dest: 'css',
-          ext: '.min.css'
-        }]
+        files: {
+          'dist/css/shiftbox_bootstrap.min.css': ['dist/css/shiftbox_bootstrap.css'],
+          'docs/dist/shiftbox_bootstrap.min.css': ['css/shiftbox_bootstrap.css']
+        }
       }
     }
   });

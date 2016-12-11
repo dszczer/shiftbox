@@ -302,7 +302,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Get actual viewport size, do not include scrollbars.
-   *
    * @returns {{width: number, height: number}}
    */
   Shiftbox.prototype.getViewport = function () {
@@ -314,7 +313,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Load image and display it on modal.
-   *
    * @param {{string}} imgSrc Web-related path to image, e.g. "/path/to/img.jpg"
    *
    * @returns void
@@ -345,7 +343,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Initialize collection of images, grouped by gallery name.
-   *
    * @returns void
    */
   Shiftbox.prototype.initGallery = function () {
@@ -380,7 +377,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Move backward in gallery's array.
-   *
    * @returns void
    */
   Shiftbox.prototype.prev = function () {
@@ -407,7 +403,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Move forward in gallery's array.
-   *
    * @returns void
    */
   Shiftbox.prototype.next = function () {
@@ -434,7 +429,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Switch display mode state.
-   *
    * @returns void
    */
   Shiftbox.prototype.zoomSwitch = function () {
@@ -447,7 +441,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Show or hide specific control buttons. Depends on current gallery's state.
-   *
    * @returns void
    */
   Shiftbox.prototype.checkButtons = function () {
@@ -477,9 +470,7 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Close modal.
-   *
    * @param e Triggered event
-   *
    * @returns void
    */
   Shiftbox.prototype.close = function (e) {
@@ -493,9 +484,7 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Shifts image correlating to mouse movements.
-   *
    * @param e      Triggered event
-   *
    * @returns void
    */
   Shiftbox.prototype.shiftOnMouse = function (e) {
@@ -527,7 +516,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Uninitialize plugin.
-   *
    * @returns void
    */
   Shiftbox.prototype.destroy = function () {
@@ -544,7 +532,6 @@ if (typeof jQuery === "undefined") {
 
   /**
    * Plugin's factory and access point to class Shiftbox.
-   *
    * @param option
    * @returns {*}
    * @constructor

@@ -14,14 +14,7 @@ Shiftbox is a jQuery plugin to display single or gallery of images of any size o
 `> npm install dszczer/shiftbox`
 
 ###Copy from Git
-Simply copy required files into your working directory. Just make sure you save directory structure.
-
-List of distribution files/directories:
-```
-/css
-/images
-/js
-```
+Simply copy files from `dist` directory.
 
 ##Basic usage
 
