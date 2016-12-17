@@ -107,7 +107,7 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.createModal = function () {
     var plugin = this,
-        $modal = $(plugin.options.modalLayout);
+      $modal = $(plugin.options.modalLayout);
 
     // if modal is not known to plugin
     if (typeof plugin.$modal === 'undefined') {
@@ -151,7 +151,7 @@ if (typeof jQuery === "undefined") {
 
       // fix modal after viewport resize
       $(window).on('resize', function () {
-        if(getCurrentShiftboxPluginInstance().modalOpened) {
+        if (getCurrentShiftboxPluginInstance().modalOpened) {
           getCurrentShiftboxPluginInstance().fitModal();
         }
       });
@@ -184,8 +184,8 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.open = function (e) {
     var plugin = this,
-        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY),
-        gallery = plugin.gallery;
+      pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY),
+      gallery = plugin.gallery;
 
     // check for 100% sure e is an Event and prevent any default action
     if (typeof e === 'object' && typeof e.preventDefault === 'function') {
@@ -225,7 +225,7 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.fitModal = function () {
     var plugin = this,
-        viewport = plugin.getViewport();
+      viewport = plugin.getViewport();
 
     // initial modal height
     plugin.current.modalHeight = Math.max(viewport.height - 60, 320);
@@ -276,19 +276,25 @@ if (typeof jQuery === "undefined") {
       .on('mousemove', function (e) {
         plugin.shiftOnMouse(e);
       })
+      .off('touchstart')
+      .on('touchstart', function (e) {
+        // cancel click
+        e.preventDefault();
+      })
       .off('touchmove')
       .on('touchmove', function (e) {
         // on mobile touch position's fix is required
         var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0],
-            elm = $(this).offset();
+          $this = $(this),
+          elm = $this.offset();
 
         e.pageX = touch.pageX - elm.left;
         e.pageY = touch.pageY - elm.top;
         e.preventDefault();
 
         // shift only when touch is on modal
-        if(e.pageX < $(this).width() && e.pageX > 0) {
-          if(e.pageY < $(this).height() && e.pageY > 0) {
+        if (e.pageX < $this.width() && e.pageX > 0) {
+          if (e.pageY < $this.height() && e.pageY > 0) {
             plugin.shiftOnMouse(e);
           }
         }
@@ -347,8 +353,8 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.initGallery = function () {
     var plugin = this,
-        gallery = plugin.$element.data(Shiftbox.DATA_GALLERY),
-        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) ? $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) : {};
+      gallery = plugin.$element.data(Shiftbox.DATA_GALLERY),
+      pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) ? $(document).data(Shiftbox.DATA_GLOBAL_GALLERY) : {};
     // if there is gallery name
     if (gallery) {
       // initial, empty gallery
@@ -359,7 +365,7 @@ if (typeof jQuery === "undefined") {
       plugin.gallery = gallery;
       // find all gallery's images and assign them
       $('[data-' + Shiftbox.DATA_GALLERY + '="' + gallery + '"]').each(function () {
-        if($(this).attr('href')) {
+        if ($(this).attr('href')) {
           pluginGallery[gallery].list.push($(this).attr('href'));
         }
       });
@@ -385,7 +391,7 @@ if (typeof jQuery === "undefined") {
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
-          pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
+        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
       // if you are able move backward, do so
       if (pluginGallery[gallery].index > 0) {
@@ -411,7 +417,7 @@ if (typeof jQuery === "undefined") {
     // do only if there is gallery
     if (plugin.gallery) {
       var gallery = plugin.gallery,
-          pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
+        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
       // if you are able move forward, do so
       if (pluginGallery[gallery].index < pluginGallery[gallery].list.length - 1) {
@@ -445,7 +451,7 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.checkButtons = function () {
     var plugin = this,
-        pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
+      pluginGallery = $(document).data(Shiftbox.DATA_GLOBAL_GALLERY);
 
     // do only if there is gallery
     if (plugin.gallery) {
@@ -497,9 +503,15 @@ if (typeof jQuery === "undefined") {
 
     // some magic
     var moveX = plugin.current.$picture.data('picture-width') > plugin.current.$picture.data('modal-width'),
-        moveY = plugin.current.$picture.data('picture-height') > $(window).height() - 60,
-        diffX = e.pageX - plugin.current.$picture.offset().left,
-        diffY = e.pageY - plugin.current.$picture.offset().top;
+      moveY = plugin.current.$picture.data('picture-height') > $(window).height() - 60,
+      diffX = e.pageX,
+      diffY = e.pageY;
+
+    // when not touchmove, because on touchmove we have already calculated diff passed within event
+    if(e.originalEvent.type !== 'touchmove') {
+      diffX -= plugin.current.$picture.offset().left;
+      diffY -= plugin.current.$picture.offset().top;
+    }
 
     // more magic :)
     if (moveX) {
@@ -520,13 +532,14 @@ if (typeof jQuery === "undefined") {
    */
   Shiftbox.prototype.destroy = function () {
     var plugin = this,
-        $plugin = $(this);
+      $plugin = $(this);
 
     if (plugin.$modal) {
       plugin.$modal.remove();
     }
     $plugin.data(Shiftbox.DATA_PLUGIN, undefined);
-    plugin.prototype.open = function () {};
+    plugin.prototype.open = function () {
+    };
   };
 
 
@@ -539,8 +552,8 @@ if (typeof jQuery === "undefined") {
   function Plugin(option) {
     return this.each(function () {
       var $this = $(this),
-          data = $this.data(Shiftbox.DATA_PLUGIN),
-          options = typeof option === 'object' && option;
+        data = $this.data(Shiftbox.DATA_PLUGIN),
+        options = typeof option === 'object' && option;
 
       if (!data) {
         $this.data(Shiftbox.DATA_PLUGIN, (data = new Shiftbox(this, options)));
